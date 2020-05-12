@@ -44,4 +44,25 @@ class Comment extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    // コメントID	commentsから削除	boolean
+    public function deleteComment(int $commentId)
+    {
+        $comment = $this->find($commentId);
+
+        return $comment->delete();
+
+    }
+
+    // 記事ID	comments からコメントデータと	コメントデータと
+	// ユーザモデルを取得	ユーザモデル
+    public function getComments(int $articleId)
+    {
+        $comments = $this->with('user')->where('article_id',$articleId)->get();
+
+        return $comments;
+
+    }
+  
+
 }

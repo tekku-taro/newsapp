@@ -87,4 +87,48 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Article', 'histories', 'user_id', 'article_id')->withTimestamps();
     }
+
+    // 記事ID	favorite pivotから☆評価値を取得	☆評価数値
+    public function getFavoriteScore($articleId)
+    {
+        $favorite = $this->favorites()->where('article_id',$articleId)->first();
+
+        if($favorite){
+            return $favorite->pivot->stars;
+        }
+        return null;
+        
+    }
+    // 記事ID,☆評価数値	☆評価数値をfavorites pivotに保存	boolean
+    public function addFavorite(int $articleId, int $stars)
+    {
+        $this->favorites()->attach($articleId, ['stars'=>$stars]);
+    }
+
+    // 記事ID	favorites pivotから削除	boolean
+    public function removeFavorite(int $articleId)
+    {
+        $this->favorites()->detach($articleId);
+
+    }
+
+    // 記事ID, title, body	comments pivotに保存	boolean
+    public function createComment(int $articleId, string $title, string $body)
+    {
+        $saveData = [
+            'title'=>$title,
+            'body'=>$body,
+            'article_id'=>$articleId
+        ];
+
+        return $this->comments()->create($saveData);
+    }
+
+    // 取得する履歴数	histories pivotから履歴データと	履歴データと
+	// Articleモデルを取得	Articleモデル
+    public function newestHistories(int $length)
+    {
+        return $this->histories()->limit($length)->latest()->get();
+    }
+
 }

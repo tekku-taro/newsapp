@@ -25,6 +25,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Article extends Model
 {
+
+    // １分間に読む文字数
+    public $countsPerMin = 500;
+
     /**
      * The "type" of the auto-incrementing ID.
      *
@@ -76,4 +80,40 @@ class Article extends Model
     {
         return $this->belongsToMany('App\User', 'histories', 'article_id', 'user_id')->withTimestamps();
     }
+
+
+    // 取得するコメント数	commentsデータを最新のものから取得	コメントデータ
+    public function newestComments(int $length)
+    {
+        return $this->comments()->limit($length)->latest()->get();
+    }  
+
+    // 記事のURL 又は ID	URLかIDから該当する記事データを取得	記事データ
+    public function getArticle($key)
+    {
+        if($this->isURL($key)){
+            return $this->where('url',$key)->first();
+        }elseif(is_int($key)){
+            return $this->find($key);
+        }
+
+        return false;
+    }
+    
+    protected function isURL($url)
+    {
+        return filter_var($url,FILTER_VALIDATE_URL);
+    }
+
+
+    // 記事データ	データから読み終えるまでの時間を	時間値
+	// 計算（分単位）	
+    // 500文字／分　で計算
+    public function calcReadingLength($article)
+    {
+        $length = mb_strlen($article);
+
+        return round($length / $this->countsPerMin);
+    }	
+
 }
