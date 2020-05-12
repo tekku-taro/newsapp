@@ -1,0 +1,201 @@
+body {
+  height: 100%;
+}
+
+a {
+  color: #53778c;
+}
+
+a:hover {
+  color: #a6bbc8;
+  text-decoration: none;
+}
+
+#sidebar-wrapper {
+  background: #ffcb7e;
+}
+
+.far.fa-newspaper {
+  font-size: 30px;
+  color: #6c757d;
+}
+
+.fa.fa-bars {
+  color: #6c757d;
+}
+
+.row.articles {
+  margin-top: 30px;
+}
+
+.fa.fa-user-circle-o {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.small, small {
+  margin-left: 20px;
+}
+
+#commentlist .list-group-item {
+  background-color: #e6feda;
+}
+
+.history-card {
+  border: none;
+}
+
+footer {
+  padding: 40px 0;
+  background-color: #ffe5b3;
+  color: #4b4c4d;
+  height: 140px;
+}
+
+.contents {
+  flex: 1;
+}
+
+@media (min-width: 577px) {
+  .sidebar {
+    width: 150px;
+  }
+}
+
+.sidemenu {
+  list-style: none;
+  padding: 0;
+}
+
+#sidebar {
+  background-color: #d1e9f7;
+}
+
+#sidemenu li {
+  padding: 5px 0px 5px 20px;
+}
+
+#sidemenu li:hover {
+  color: rgb(46,85,143);
+  background-color: #eee;
+}
+
+.container.footer-container {
+  text-align: center;
+}
+
+footer .list-inline-item a {
+  text-decoration: none;
+  margin: 15px;
+  color: #985f36;
+  font-weight: bold;
+}
+
+footer .list-inline-item a:hover {
+  text-decoration: none;
+  margin: 15px;
+  color: #9d7a61;
+}
+
+@media (max-width: 576px) {
+  #page-contents {
+    flex-direction: column;
+  }
+}
+
+#page-contents {
+  min-height: 500px;
+}
+
+.dropdown-toggle:focus, .dropdown-toggle:hover {
+  text-decoration: none;
+  color: rgba(255,255,255,0.75);
+}
+
+.dropdown-toggle {
+  text-decoration: none;
+  color: rgba(255,255,255,.5);
+}
+
+nav .nav-item {
+  margin: 0 5px;
+}
+
+.card.headline-card img {
+  width: 150px;
+  overflow: hidden;
+}
+
+.breadcrumb {
+  background-color: transparent;
+}
+
+.search-form {
+  margin-bottom: 1rem;
+}
+
+.btn-group, .btn-group-vertical {
+  margin-bottom: 10px;
+}
+
+input[type=checkbox], input[type=radio] {
+  margin-right: 10px;
+}
+
+.manage-folder button {
+  margin: 5px;
+  padding: 2px 20px;
+}
+
+.form-heading {
+  padding-bottom: 5px;
+  border-bottom: 1px #dbdbdc solid;
+  margin-bottom: 25px;
+}
+
+.sidebar-header {
+  font-weight: bold;
+  padding-bottom: 5px;
+  border-bottom: 1px #adc4d2 solid;
+  text-align: center;
+}
+
+.sidebar li {
+  padding-left: 30px;
+}
+
+.sidemenu-list li:hover {
+  background-color: #eee;
+}
+
+.sidemenu-list li:active {
+  background-color: #87c8ee;
+}
+
+.sidemenu-list li.active {
+  background-color: #fceea5;
+}
+
+.rating-star {
+  margin-right: 5px;
+}
+
+.clipping-date {
+  text-decoration: underline;
+}
+
+.pagination a {
+  color: #558cbf;
+}
+
+.page-title {
+  margin-bottom: 15px;
+}
+
+.save-btn {
+  padding: 6px 25px;
+}
+
+.form-row .form-group {
+}
+
