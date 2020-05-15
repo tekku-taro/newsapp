@@ -11,8 +11,8 @@
                     <div class="col-md-8">
                         <div>
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#"><span>配信サイト</span></a></li>
-                                <li class="breadcrumb-item"><a href="#"><span>一覧</span></a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('news_sites.index') }}"><span>配信サイト</span></a></li>
+                                <li class="breadcrumb-item"><span>一覧</span></li>
                             </ol>
                         </div>
                     </div>
@@ -38,35 +38,43 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($newsSites as $newsSite)
+                                        <tr>
+                                            <td>{{ $newsSite->name }}</td>
+                                            <td>{{ $newsSite->url }}</td>
+                                            <td>{{ $newsSite->details }}</td>
+                                            <td>{{ $newsSite->category->name }}</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button class="btn btn-secondary" type="button">編集</button>
+                                                    <button class="btn btn-danger" type="button">削除</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     <tr>
                                         <td>AP通信</td>
                                         <td>http://ap tuchin</td>
                                         <td>時事</td>
                                         <td>国際ニュース配信</td>
                                         <td>
-                                            <div class="btn-group btn-group-sm" role="group"><button class="btn btn-secondary" type="button">編集</button><button class="btn btn-danger" type="button">削除</button></div>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{{ route('news_sites.edit',['id'=>$newsSite->id]) }}" class="btn btn-secondary"></a>
+                                                {{-- <button class="btn btn-secondary" type="button">編集</button> --}}
+                                                <form action="{{ route('news_sites.destroy', ['id' => $newsSite->id]) }}" method="post">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button class="btn btn-danger" type="submit">削除</button>
+                                                </form>
+                                            </div>                                            
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>Cell 1</td>
-                                        <td>Cell 2</td>
-                                        <td>Cell 2</td>
-                                        <td>Cell 2</td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm" role="group"><button class="btn btn-secondary" type="button">編集</button><button class="btn btn-danger" type="button">削除</button></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cell 3</td>
-                                        <td>Cell 3</td>
-                                        <td>Cell 4</td>
-                                        <td>Cell 4</td>
-                                        <td>Cell 4</td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
-                        <nav style="margin-top: 22px;">
+                        {{ $newsSites->links() }}
+                        {{-- <nav style="margin-top: 22px;">
                             <ul class="pagination">
                                 <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
                                 <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -76,7 +84,7 @@
                                 <li class="page-item"><a class="page-link" href="#">5</a></li>
                                 <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
                             </ul>
-                        </nav>
+                        </nav> --}}
                     </div>
                 </div>
             </div>

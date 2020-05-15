@@ -12,7 +12,7 @@
                     <div>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#"><span>ユーザ設定</span></a></li>
-                            <li class="breadcrumb-item"><a href="#"><span>一覧</span></a></li>
+                            <li class="breadcrumb-item"><span>一覧</span></li>
                         </ol>
                     </div>
                 </div>
@@ -37,6 +37,27 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>
+                                            {!! ($user->comment_to_public)? "公開": "非公開" ;  !!}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{{ route('users.edit',['id'=>$user->id]) }}" class="btn btn-secondary"></a>
+                                                {{-- <button class="btn btn-secondary" type="button">編集</button> --}}
+                                                <form action="{{ route('users.destroy', ['id' => $user->id]) }}" method="post">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button class="btn btn-danger" type="submit">削除</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>                                    
+                                @endforeach
+
                                 <tr>
                                     <td>山田　太郎</td>
                                     <td>yamada@hotmail.com</td>
@@ -45,24 +66,12 @@
                                         <div class="btn-group btn-group-sm" role="group"><button class="btn btn-secondary" type="button">編集</button><button class="btn btn-danger" type="button">削除</button></div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Cell 1</td>
-                                    <td>Cell 2</td>
-                                    <td>非公開</td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm" role="group"><button class="btn btn-secondary" type="button">編集</button><button class="btn btn-danger" type="button">削除</button></div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Cell 3</td>
-                                    <td>Cell 3</td>
-                                    <td>Cell 4</td>
-                                    <td>Cell 4</td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
-                    <nav style="margin-top: 22px;">
+                    {{ $user->links() }}
+                    {{-- <nav style="margin-top: 22px;">
                         <ul class="pagination">
                             <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
                             <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -72,7 +81,7 @@
                             <li class="page-item"><a class="page-link" href="#">5</a></li>
                             <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
                         </ul>
-                    </nav>
+                    </nav> --}}
                 </div>
             </div>
         </div>

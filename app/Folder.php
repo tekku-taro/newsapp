@@ -37,47 +37,53 @@ class Folder extends Model
     // 記事ID	該当記事がフォルダ内にあるかチェック	boolean
     public function hasArticle(int $articleId)
     {
-        return $this->articles()->where('article_id',$articleId)->exists();
+        return $this->articles()->where('article_id', $articleId)->exists();
     }
 
     // search_key, id	検索キーとIDからフォルダに保存した	記事データ
-	// 記事データを取得	
+    // 記事データを取得
     public function getClippings(string $searchKey)
     {
-        return $this->articles()->where('title','like','%'.$searchKey.'%')->get();
+        return $this->articles()->where('title', 'like', '%'.$searchKey.'%')->get();
     }
 
 
     // id, article_id,old_id	既にフォルダにあるか確認	boolean
-	// 無ければ保存する	
-    // 他のフォルダにあれば移動する	
-    public function clipArticle(int $articleId,int $oldId)
+    // 無ければ保存する
+    // 他のフォルダにあれば移動する
+    public function clipArticle(int $articleId, int $oldId = null)
     {
-        if(!$this->hasArticle($articleId)){
-            $this->deleteInOtherFolder($articleId,$oldId);
+        if (!$this->hasArticle($articleId)) {
+            $this->deleteInOtherFolder($articleId, $oldId);
             $this->articles()->attach($articleId);
         }
         return true;
     }
 
     // 他のフォルダをチェック、あれば削除
-    public function deleteInOtherFolder($articleId, $oldId)
+    protected function deleteInOtherFolder($articleId, $oldId)
     {
-        $folder = $this->find($oldId);
-        $article = $folder->articles()->where('article_id',$articleId)->first();
-        if($article){
-            $folder->articles()->detach($articleId);
+        if (empty($oldId)) {
+            return false;
         }
+        $folder = $this->find($oldId);
+        $article = $folder->articles()->where('article_id', $articleId)->first();
+        if ($article) {
+            $folder->articles()->detach($articleId);
+            return true;
+        }
+
+        return false;
     }
 
     // id, article_id	既にフォルダにあるか確認	boolean
-	// あれば削除する	
+    // あれば削除する
     public function deleteArticle(int $articleId)
     {
-        if($this->hasArticle($articleId)){
+        if ($this->hasArticle($articleId)) {
             $this->articles()->detach($articleId);
             return true;
-        }else{
+        } else {
             return false;
         }
     }

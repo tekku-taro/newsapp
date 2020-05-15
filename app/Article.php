@@ -62,7 +62,7 @@ class Article extends Model
      */
     public function favorites()
     {
-        return $this->belongsToMany('App\User', 'favorites', 'article_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany('App\User', 'favorites', 'article_id', 'user_id')->withPivot('stars')->withTimestamps();
     }
 
     /**
@@ -86,14 +86,14 @@ class Article extends Model
     public function newestComments(int $length)
     {
         return $this->comments()->limit($length)->latest()->get();
-    }  
+    }
 
     // 記事のURL 又は ID	URLかIDから該当する記事データを取得	記事データ
     public function getArticle($key)
     {
-        if($this->isURL($key)){
-            return $this->where('url',$key)->first();
-        }elseif(is_int($key)){
+        if ($this->isURL($key)) {
+            return $this->where('url', $key)->first();
+        } elseif (is_int($key)) {
             return $this->find($key);
         }
 
@@ -102,18 +102,17 @@ class Article extends Model
     
     protected function isURL($url)
     {
-        return filter_var($url,FILTER_VALIDATE_URL);
+        return filter_var($url, FILTER_VALIDATE_URL);
     }
 
 
     // 記事データ	データから読み終えるまでの時間を	時間値
-	// 計算（分単位）	
+    // 計算（分単位）
     // 500文字／分　で計算
     public function calcReadingLength($article)
     {
         $length = mb_strlen($article);
 
         return round($length / $this->countsPerMin);
-    }	
-
+    }
 }

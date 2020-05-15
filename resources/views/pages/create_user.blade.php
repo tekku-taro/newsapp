@@ -11,8 +11,8 @@
                 <div class="col-md-8">
                     <div>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#"><span>ユーザ設定</span></a></li>
-                            <li class="breadcrumb-item"><a href="#"><span>新規登録</span></a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('users.index') }}"><span>ユーザ設定</span></a></li>
+                            <li class="breadcrumb-item"><span>新規登録</span></li>
                         </ol>
                     </div>
                 </div>
@@ -20,9 +20,9 @@
             <div class="d-flex justify-content-between">
                 <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas" style="color: rgb(52,143,249);"></i>&nbsp;ユーザ 新規登録</h2>
             </div>
+            <form method="post" action="{{ route('users.store') }}" class="form">
             <div class="col-sm-12 text-right"><button class="btn btn-primary btn-sm save-btn" type="submit">保存</button></div>
             <h4 class="form-heading">基本情報</h4>
-            <form method="post">
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="name">名前</label>
@@ -44,8 +44,14 @@
                 <h4 class="form-heading">アプリ設定</h4>
                 <div class="form-row">
                     <div class="col">
-                        <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="source">コメント・評価の設定</label>
-                            <div class="col col-md-9"><select class="form-control" id="comment-to-public" name="comment_to_public"><optgroup label="公開設定の選択"><option value="true" selected="">公開</option><option value="false">非公開</option></optgroup></select></div>
+                        <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="comment-to-public">コメント・評価の設定</label>
+                            <div class="col col-md-9">
+                                <select class="form-control" id="comment-to-public" name="comment_to_public">
+                                    <optgroup label="公開設定の選択">
+                                        <option value="true" selected>公開</option>
+                                        <option value="false">非公開</option></optgroup>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

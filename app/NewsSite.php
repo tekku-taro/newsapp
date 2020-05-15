@@ -33,7 +33,7 @@ class NewsSite extends Model
     /**
      * @var array
      */
-    protected $fillable = ['category_id', 'country_id', 'name', 'url', 'details', 'source', 'pagesize', 'page'];
+    protected $fillable = ['category_id', 'country_id', 'name', 'url', 'details', 'sources', 'pagesize', 'page'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -75,33 +75,47 @@ class NewsSite extends Model
     }
 
     // 記事データ	該当記事があれば記事を取得	FALSE
-	// なければ一括保存	保存データを返す
+    // なければ一括保存	保存データを返す
     public function saveAndGetArticles($apidata)
     {
         $saveData = [];
         $articleData = [];
         foreach ($apidata as $key => $record) {
-            $article = $this->articles()->getArticle($record);
-            if($article){
+            $article = $this->articles()->getRelated()->getArticle($record['url']);
+            if ($article) {
                 $articleData[] = $article;
-            }else{
-                $saveData[] = $record;
+            } else {
+                $articleData[] = $this->validateAndSaveArticle($record);
             }
-            
         }
-        $articleData += $this->saveArticles($saveData);
 
         return $articleData;
-
     }
 
     // 記事データ	データのバリデーション	FALSE
-	// 記事データを一括で保存する	保存データを返す
+    // 記事データをで保存する	保存データを返す
+    protected function validateAndSaveArticle($article)
+    {
+        $articles = $this->validateSaveData([$article]);
+        if(!empty($articles)){
+            dump($articles[0]);
+            return $this->articles()->getRelated()->create($articles[0]);
+        }
+
+        return false;
+    }
+
+    // 記事データ	データのバリデーション	FALSE
+    // 記事データを一括で保存する	結果を返す
     public function saveArticles($articles)
     {
         $articles = $this->validateSaveData($articles);
+        
+        if($this->articles()->getRelated()->insert($articles)){
+            return $articles;
+        }
 
-        return $this->articles()->insert($articles);
+        return false;
     }
 
     protected function validateSaveData($data)
@@ -109,16 +123,18 @@ class NewsSite extends Model
         $rules = [
             'title'=>'required|string',
             'description'=>'required|string',
-            'content'=>'required|string'
+            'content'=>'required|string',
+            'url'=>'required|url',
+            'news_site_id'=>'required|int'
         ];
 
         foreach ($data as $key => $article) {
             $validator = Validator::make($article, $rules);
-            if($validator->fails()){
+            if ($validator->fails()) {
                 unset($data[$key]);
             }
         }
 
         return $data;
-    }    
+    }
 }

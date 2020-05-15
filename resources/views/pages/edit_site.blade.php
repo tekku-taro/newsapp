@@ -11,8 +11,8 @@
                     <div class="col-md-8">
                         <div>
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#"><span>配信サイト</span></a></li>
-                                <li class="breadcrumb-item"><a href="#"><span>情報編集</span></a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('users.index') }}"><span>配信サイト</span></a></li>
+                                <li class="breadcrumb-item"><span>情報編集</span></li>
                             </ol>
                         </div>
                     </div>
@@ -20,38 +20,38 @@
                 <div class="d-flex justify-content-between">
                     <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas" style="color: rgb(52,143,249);"></i>&nbsp;配信サイト 情報編集</h2>
                 </div>
+                <form method="post" action="{{ route('news_sites.update', ['id' => $newsSite->id]) }}" class="form">
                 <div class="col-sm-12 text-right"><button class="btn btn-primary btn-sm save-btn" type="submit">更新</button></div>
                 <h4 class="form-heading">基本情報</h4>
-                <form method="post">
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="url">URL</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="url" name="url" required=""><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="url" name="url" value="{{ $newsSite->url }}" required><small class="form-text text-danger">Please enter a correct email address.</small></div>
                             </div>
                             <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="name">サイト名称</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="name" name="name" required=""><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="name" name="name" value="{{ $newsSite->name }}" required><small class="form-text text-danger">Please enter a correct email address.</small></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="details">詳細</label>
-                                <div class="col col-md-9"><textarea class="form-control" id="details" name="details" rows="6"></textarea></div>
+                                <div class="col col-md-9"><textarea class="form-control" id="details" name="details" rows="6">{{ $newsSite->details }}</textarea></div>
                             </div>
                         </div>
                     </div>
                     <h4 class="form-heading">WebAPI情報</h4>
                     <div class="form-row">
                         <div class="col-md-6">
-                            <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="source">ソース</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="source" name="source"><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                            <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="sources">ソース</label>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="sources" name="sources" value="{{ $newsSite->sources }}"><small class="form-text text-danger">Please enter a correct email address.</small></div>
                             </div>
                             <p style="font-size: 13px;color: rgb(46,88,130);">ソースか国名・カテゴリのどちらか入力必須</p>
                             <div class="card">
                                 <div class="card-body">
                                     <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="country">国名</label>
-                                        <div class="col col-md-9"><input class="form-control" type="text" id="country" name="country"><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                        <div class="col col-md-9"><input class="form-control" type="text" id="country" name="country" value="{{ $newsSite->country->code }}"><small class="form-text text-danger">Please enter a correct email address.</small></div>
                                     </div>
                                     <div class="form-group row"><label class="col-form-label col-md-3" for="category">カテゴリ</label>
-                                        <div class="col col-md-9"><input class="form-control" type="text" id="category" name="category"><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                        <div class="col col-md-9"><input class="form-control" type="text" id="category" name="category" value="{{ $newsSite->category->name }}"><small class="form-text text-danger">Please enter a correct email address.</small></div>
                                     </div>
                                 </div>
                             </div>
