@@ -24,5 +24,7 @@ class ArticlesTableSeeder extends Seeder
             'author'=>'https://www.facebook.com/bbcnews',
         ];
         Article::create($data);
+
+        factory(App\Article::class, 20)->create();
     }
 }

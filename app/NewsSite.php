@@ -33,7 +33,7 @@ class NewsSite extends Model
     /**
      * @var array
      */
-    protected $fillable = ['category_id', 'country_id', 'name', 'url', 'details', 'sources', 'pagesize', 'page'];
+    protected $fillable = ['category_id', 'country_id', 'name', 'url', 'details', 'sources', 'pagesize'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -58,7 +58,17 @@ class NewsSite extends Model
     {
         return $this->hasMany('App\Article');
     }
+    
+    public function setPagesizeAttribute($value)
+    {
+        if (empty($value)) {
+            $value = 20;
+        }
+        $this->attributes['pagesize'] = $value;
+    }
 
+
+    // id	APIに渡すクエリデータを作成	クエリデータ
     public function getQueryArray(int $id)
     {
         $newsSite = $this->with(['category','country'])->where('id', $id)->select(['sources','country_id','category_id','pagesize','page'])->first();
@@ -69,6 +79,36 @@ class NewsSite extends Model
             'sources'=>$newsSite->sources,
             'pageSize'=>$newsSite->pagesize,
             'page'=>$newsSite->page,
+        ];
+
+        return array_filter($queryArray);
+    }
+    
+    //
+    /**
+     * 全てのニュース取得用サイトのクエリスコープ
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDefaultSite($query)
+    {
+        return $query->where('name', '全て');
+    }
+
+    // sources,q	APIに渡すクエリデータを作成	クエリデータ
+    public function getQueryArrayBySources($q = '', $page = null, $pagesize = null)
+    {
+        // $newsSite = $this->with(['category','country'])->where('sources', $sources)
+        // ->select(['sources','country_id','category_id','pagesize'])->first();
+    
+        $queryArray = [
+            'country'=>(isset($this->country))? $this->country->code:null,
+            'category'=>(isset($this->category))? $this->category->name:null,
+            'sources'=>$this->sources,
+            'pageSize'=>(isset($pagesize))? $pagesize :$this->pagesize,
+            'page'=>$page ,
+            'q'=>$q
         ];
 
         return array_filter($queryArray);
@@ -85,7 +125,24 @@ class NewsSite extends Model
             if ($article) {
                 $articleData[] = $article;
             } else {
-                $articleData[] = $this->validateAndSaveArticle($record);
+                $article = $this->validateAndSaveArticle($record);
+                if ($article) {
+                    $articleData[] = $article;
+                }
+            }
+        }
+
+        return $articleData;
+    }
+
+    // 記事データ	該当記事があれば記事を取得
+    public function getArticles($apidata)
+    {
+        $articleData = [];
+        foreach ($apidata as $key => $record) {
+            $article = $this->articles()->getRelated()->getArticle($record['url']);
+            if ($article) {
+                $articleData[] = $article;
             }
         }
 
@@ -97,9 +154,9 @@ class NewsSite extends Model
     protected function validateAndSaveArticle($article)
     {
         $articles = $this->validateSaveData([$article]);
-        if(!empty($articles)){
-            dump($articles[0]);
-            return $this->articles()->getRelated()->create($articles[0]);
+        if (!empty($articles)) {
+            // dump('saved:', $articles[0]);
+            return $this->articles()->create($articles[0]);
         }
 
         return false;
@@ -107,15 +164,15 @@ class NewsSite extends Model
 
     // 記事データ	データのバリデーション	FALSE
     // 記事データを一括で保存する	結果を返す
-    public function saveArticles($articles)
+    public function saveArticles($data)
     {
-        $articles = $this->validateSaveData($articles);
-        
-        if($this->articles()->getRelated()->insert($articles)){
-            return $articles;
+        $articles = [];
+        $data = $this->validateSaveData($data);
+        foreach ($data as $key => $article) {
+            $articles[] = $this->articles()->create($article);
         }
 
-        return false;
+        return $articles;
     }
 
     protected function validateSaveData($data)
@@ -123,9 +180,7 @@ class NewsSite extends Model
         $rules = [
             'title'=>'required|string',
             'description'=>'required|string',
-            'content'=>'required|string',
-            'url'=>'required|url',
-            'news_site_id'=>'required|int'
+            'url'=>'required|url'
         ];
 
         foreach ($data as $key => $article) {

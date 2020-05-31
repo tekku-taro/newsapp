@@ -16,18 +16,18 @@ class NewsAPI
         'q'=>null,
         'pageSize'=>null,
         'page'=>null,
-        'apiKey'=>'7b58a86bb41a4e60bdf933f01caa8d8e',
+        'apiKey'=> null,
     ];
 
     public $requiredProperties = [
-        'source',
-        'author',
-        'title',
-        'description',
-        'url',
-        'urlToImage',
-        'publishedAt',
-        'content',
+        'source'=>'source',
+        'author'=>'author',
+        'title'=>'title',
+        'description'=>'description',
+        'url'=>'url',
+        'urlToImage'=>'url_to_image',
+        'publishedAt'=>'published_at',
+        'content'=>'content',
     ];
 
     protected $context = [
@@ -46,18 +46,35 @@ class NewsAPI
 
         if ($this->validateKeys($keys)) {
             $url = $this->makePath($keys);
-            // print($url);
+            // dd($url);
             $rawdata = file_get_contents($url, false, stream_context_create($this->context));
     
             $rawdata = json_decode($rawdata);
-
+            if (!$this->checkRawData($rawdata)) {
+                return false;
+            }
+            // dd($rawdata);
             $this->extractData($rawdata);
         } else {
             return false;
         }
         
-        dump($this->newsData[0]);
+        // dump($this->newsData[0]);
         return $this->newsData;
+    }
+
+    protected function checkRawData($rawdata)
+    {
+        if (isset($rawdata->status) && $rawdata->status == 'error') {
+            $this->status = ['status' => $rawdata->status,'message'=>$rawdata->message];
+            return false;
+        } elseif (count($rawdata->articles) == 0) {
+            $this->status = ['status' => $rawdata->status,'message'=>'記事が取得できませんでした。'];
+            return false;
+        }
+
+
+        return true;
     }
 
     protected function extractData($rawdata)
@@ -67,8 +84,8 @@ class NewsAPI
         foreach ($rawdata->articles as $key => $article) {
             $raw = [];
             foreach ($article as $key => $value) {
-                if (in_array($key, $this->requiredProperties)) {
-                    $raw[$key] = $value;
+                if (array_key_exists($key, $this->requiredProperties)) {
+                    $raw[$this->requiredProperties[$key]] = $value;
                 }
             }
             $this->newsData[] = $raw;
@@ -97,6 +114,8 @@ class NewsAPI
                 $this->queryArray[$key] = $value;
             }
         }
+
+        $this->setAPIKey();
     }
 
     protected function validateKeys($keys)
@@ -109,5 +128,10 @@ class NewsAPI
         }
 
         return true;
+    }
+
+    private function setAPIKey()
+    {
+        $this->queryArray['apiKey'] = env('API_KEY');
     }
 }

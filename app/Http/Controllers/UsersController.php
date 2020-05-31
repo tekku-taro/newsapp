@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -25,7 +26,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('page.create_user');
+        return view('pages.create_user');
     }
 
     /**
@@ -39,10 +40,14 @@ class UsersController extends Controller
         $request->validate([
             'name'=>'required|string',
             'email'=>'required|email',
-            'password'=>'required|password',
+            'password'=>'required|string|min:6',
         ]);
+        $saveData = $request->all();
 
-        User::create($request->all());
+        $saveData['password'] = Hash::make($saveData['password']);
+
+        
+        User::create($saveData);
 
         return redirect('/users')->with('success', '新規ユーザを登録しました。');
     }
@@ -80,12 +85,19 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'=>'required|string',
+            'name'=>'required|string|min:3',
             'email'=>'required|email',
-            'password'=>'required|password',
+            'password'=>'sometimes|nullable|min:6',
         ]);
+        $saveData = $request->all();
+        if (!empty($saveData['password'])) {
+            $saveData['password'] = Hash::make($saveData['password']);
+        } else {
+            unset($saveData['password']);
+        }
+        
         $user = User::findOrFail($id);
-        $user->fill($request->all())->save();
+        $user->fill($saveData)->save();
 
         return redirect('/users')->with('success', 'ユーザ情報を編集しました');
     }

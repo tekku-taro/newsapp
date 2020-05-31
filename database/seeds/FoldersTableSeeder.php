@@ -18,13 +18,14 @@ class FoldersTableSeeder extends Seeder
             '一時フォルダ','趣味','仕事'
         ];
 
-        User::create([
-            'name'=>'taro','email'=>'taro@gmail.com',
-            'password'=> Hash::make('password'),'note'=>'test'
-        ])->each(function ($user) use ($folders) {
-            foreach ($folders as $value) {
-                $user->folders()->create(['name'=>$value]);
-            }
-        });
+        factory(App\Folder::class, 5)->create();
+        // User::create([
+        //     'name'=>'taro','email'=>'taro@gmail.com',
+        //     'password'=> Hash::make('password'),'note'=>'test'
+        // ])->each(function ($user) use ($folders) {
+        //     foreach ($folders as $value) {
+        //         $user->folders()->create(['name'=>$value]);
+        //     }
+        // });
     }
 }

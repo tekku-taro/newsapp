@@ -2,16 +2,16 @@
 
 @section('title','Users')
 
-@section('contents')
+@section('content')
 <div class="d-flex" id="page-contents">
     @include('sidebars.users_menu')
-    <main id="main" class="contents mt-3 mb-5">
+    <main id="main" class="container contents mt-3 mb-5">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
                     <div>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#"><span>ユーザ設定</span></a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('users.index') }}"><span>ユーザ設定</span></a></li>
                             <li class="breadcrumb-item"><span>一覧</span></li>
                         </ol>
                     </div>
@@ -42,46 +42,24 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
-                                            {!! ($user->comment_to_public)? "公開": "非公開" ;  !!}
+                                            {{ ($user->comment_to_public)? "公開": "非公開" }}
                                         </td>
                                         <td>
                                             <div class="btn-group btn-group-sm" role="group">
-                                                <a href="{{ route('users.edit',['id'=>$user->id]) }}" class="btn btn-secondary"></a>
-                                                {{-- <button class="btn btn-secondary" type="button">編集</button> --}}
-                                                <form action="{{ route('users.destroy', ['id' => $user->id]) }}" method="post">
+                                                <a href="{{ route('users.edit',[$user->id]) }}" class="btn btn-secondary">編集</a>
+                                                <form action="{{ route('users.destroy', [$user->id]) }}" method="post">
                                                     @method('DELETE')
                                                     @csrf
-                                                    <button class="btn btn-danger" type="submit">削除</button>
+                                                    <button class="btn btn-danger" type="submit" onclick="if(!confirm('本当に削除しますか？')){return false;}">削除</button>
                                                 </form>
                                             </div>
                                         </td>
                                     </tr>                                    
                                 @endforeach
-
-                                <tr>
-                                    <td>山田　太郎</td>
-                                    <td>yamada@hotmail.com</td>
-                                    <td>公開</td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm" role="group"><button class="btn btn-secondary" type="button">編集</button><button class="btn btn-danger" type="button">削除</button></div>
-                                    </td>
-                                </tr>
-
                             </tbody>
                         </table>
                     </div>
-                    {{ $user->links() }}
-                    {{-- <nav style="margin-top: 22px;">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                        </ul>
-                    </nav> --}}
+                    {{ $users->links() }}
                 </div>
             </div>
         </div>

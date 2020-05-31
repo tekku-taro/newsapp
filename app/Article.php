@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property integer $id
@@ -27,7 +28,7 @@ class Article extends Model
 {
 
     // １分間に読む文字数
-    public $countsPerMin = 500;
+    public static $countsPerMin = 500;
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -40,6 +41,9 @@ class Article extends Model
      * @var array
      */
     protected $fillable = ['news_site_id', 'title', 'description', 'url', 'url_to_image', 'published_at', 'content', 'volume', 'author'];
+
+
+    protected $dates = ['published_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -81,20 +85,70 @@ class Article extends Model
         return $this->belongsToMany('App\User', 'histories', 'article_id', 'user_id')->withTimestamps();
     }
 
+    public function setUrlToImageAttribute($value)
+    {
+        if (strlen($value) > 191) {
+            $value = null;
+        }
+        $this->attributes['url_to_image'] = $value;
+    }
+
+    public function getUrlToImageAttribute($value)
+    {
+        if (empty($value)) {
+            $value = asset('img/Placeholder.png') ;
+        }
+        return $value;
+    }
+
+    public function setDescriptionAttribute($value)
+    {
+        if (strlen($value) > 191) {
+            $value = substr($value, 0, 191);
+        }
+        $this->attributes['description'] = mb_convert_encoding($value, 'UTF-8', 'auto');
+    }
+
+    public function setAuthorAttribute($value)
+    {
+        if (strlen($value) > 191) {
+            $value = substr($value, 0, 191);
+        }
+        $this->attributes['author'] = $value;
+    }
+
+
+    // folder ids と検索キーから記事を取得するクエリを返す
+    public static function getClippingsFromFolderIds(string $searchKey = null, $folderIds)
+    {
+        return self::whereHas('folders', function ($q) use ($folderIds) {
+            $q->whereIn('folder_id', $folderIds);
+        })->where('title', 'like', '%'.$searchKey.'%');
+    }
 
     // 取得するコメント数	commentsデータを最新のものから取得	コメントデータ
-    public function newestComments(int $length)
+    public function newestComments(int $length = 10)
     {
         return $this->comments()->limit($length)->latest()->get();
+    }
+
+    public function setPublishedAtAttribute($value)
+    {
+        // utcからdatetimeへ変換
+        $dt = new \DateTime($value);
+        $tz = new \DateTimeZone('Asia/Tokyo');
+        
+        $dt->setTimezone($tz);
+        $this->attributes['published_at'] = $dt->format('Y-m-d H:i:s');
     }
 
     // 記事のURL 又は ID	URLかIDから該当する記事データを取得	記事データ
     public function getArticle($key)
     {
         if ($this->isURL($key)) {
-            return $this->where('url', $key)->first();
+            return $this->with('newsSite.category')->where('url', $key)->first();
         } elseif (is_int($key)) {
-            return $this->find($key);
+            return $this->with('newsSite.category')->find($key);
         }
 
         return false;
@@ -109,10 +163,24 @@ class Article extends Model
     // 記事データ	データから読み終えるまでの時間を	時間値
     // 計算（分単位）
     // 500文字／分　で計算
-    public function calcReadingLength($article)
+    public function calcReadingLength($content = null, $isHtml = true)
     {
-        $length = mb_strlen($article);
-
-        return round($length / $this->countsPerMin);
+        if (empty($content)) {
+            // $content = $this->content;
+            return $this->readingLength = null;
+        }
+        if ($isHtml) {
+            $dom = new \DOMDocument;
+            $dom->loadXML('<div>' . $content . '</div>');
+            
+            if (empty($dom->textContent)) {
+                // $content = $this->content;
+                return  $this->calcReadingLength($content, false) / 3;
+            }
+            $length = mb_strlen($dom->textContent);
+        } else {
+            $length = mb_strlen($content);
+        }
+        return $this->readingLength = round($length / static::$countsPerMin, 1);
     }
 }

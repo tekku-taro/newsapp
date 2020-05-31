@@ -2,10 +2,10 @@
 
 @section('title','NewsSites')
 
-@section('contents')
+@section('content')
     <div class="d-flex" id="page-contents">
         @include('sidebars.newssites_menu')
-        <main id="main" class="contents mt-3 mb-5">
+        <main id="main" class="container contents mt-3 mb-5">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-8">
@@ -20,16 +20,26 @@
                 <div class="d-flex justify-content-between">
                     <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas" style="color: rgb(52,143,249);"></i>&nbsp;配信サイト 情報編集</h2>
                 </div>
-                <form method="post" action="{{ route('news_sites.update', ['id' => $newsSite->id]) }}" class="form">
+                <form method="post" action="{{ route('news_sites.update', [$newsSite->id]) }}" class="form">
+                    @method('PUT')
+                    @csrf
                 <div class="col-sm-12 text-right"><button class="btn btn-primary btn-sm save-btn" type="submit">更新</button></div>
                 <h4 class="form-heading">基本情報</h4>
                     <div class="form-row">
                         <div class="col-md-6">
-                            <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="url">URL</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="url" name="url" value="{{ $newsSite->url }}" required><small class="form-text text-danger">Please enter a correct email address.</small></div>
-                            </div>
                             <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="name">サイト名称</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="name" name="name" value="{{ $newsSite->name }}" required><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="name" name="name" value="{{ $newsSite->name }}" required>
+                                    @error('name')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div> 
+                            </div>                           
+                            <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="url">URL</label>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="url" name="url" value="{{ $newsSite->url }}" required>
+                                    @error('url')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>                             
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -42,26 +52,57 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="sources">ソース</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="sources" name="sources" value="{{ $newsSite->sources }}"><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="sources" name="sources" value="{{ $newsSite->sources }}">
+                                    @error('sources')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>                              
                             </div>
                             <p style="font-size: 13px;color: rgb(46,88,130);">ソースか国名・カテゴリのどちらか入力必須</p>
                             <div class="card">
                                 <div class="card-body">
                                     <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="country">国名</label>
-                                        <div class="col col-md-9"><input class="form-control" type="text" id="country" name="country" value="{{ $newsSite->country->code }}"><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                        <div class="col col-md-9">
+                                            <select class="form-control" id="country" name="country_id" >
+                                                <optgroup label="国名の選択">
+                                                    <option value="">--</option>
+                                                    @foreach ($lists['countries'] as $id => $country)
+                                                    <option value="{{ $id }}" {{ (isset($newsSite->country) && $newsSite->country->id == $id)? 'selected': '' }}>{{ $country }}</option>                                                        
+                                                    @endforeach
+                                                </optgroup>
+                                            </select>                                            
+                                            {{-- <input class="form-control" type="text" id="country" name="country" value="{{ $newsSite->country->code }}" required> --}}
+                                            @error('country')
+                                                <small class="form-text text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>                                     
                                     </div>
                                     <div class="form-group row"><label class="col-form-label col-md-3" for="category">カテゴリ</label>
-                                        <div class="col col-md-9"><input class="form-control" type="text" id="category" name="category" value="{{ $newsSite->category->name }}"><small class="form-text text-danger">Please enter a correct email address.</small></div>
+                                        <div class="col col-md-9">
+                                            <select class="form-control" id="category" name="category_id" >
+                                                <optgroup label="カテゴリの選択">
+                                                    <option value="">--</option>
+                                                    @foreach ($lists['categories'] as $id => $category)
+                                                    <option value="{{ $id }}" {{ (isset($newsSite->category) && $newsSite->category->id == $id)? 'selected': '' }}>{{ $category }}</option>                                                        
+                                                    @endforeach
+                                                </optgroup>
+                                            </select>                                             
+                                            {{-- <input class="form-control" type="text" id="category" name="category" value="{{ $newsSite->category->name }}" required> --}}
+                                            @error('category')
+                                                <small class="form-text text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>                                     
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="pagesize">表示数</label>
-                                <div class="col col-md-9"><input class="form-control" type="text" id="pagesize" name="pagesize"></div>
-                            </div>
-                            <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="page">ページ数</label>
-                                <div id="page" class="col col-md-9" name="page"><input class="form-control" type="text" id="title" name="title"></div>
+                                <div class="col col-md-9"><input class="form-control" type="text" id="pagesize" name="pagesize" value="{{ $newsSite->pagesize }}" required>
+                                    @error('pagesize')
+                                        <small class="form-text text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>                             
                             </div>
                         </div>
                     </div>

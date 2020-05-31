@@ -2,6 +2,6 @@
 
 @section('title','NewsApp')
 
-@section('contents')
+@section('content')
     
 @endsection

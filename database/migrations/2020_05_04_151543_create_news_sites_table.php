@@ -16,7 +16,7 @@ class CreateNewsSitesTable extends Migration
         Schema::create('news_sites', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('url');
+            $table->string('url')->nullable();
             $table->string('details')->nullable();
             $table->string('source')->nullable();
             $table->unsignedSmallInteger('category_id')->nullable();

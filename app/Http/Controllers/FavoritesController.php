@@ -34,7 +34,17 @@ class FavoritesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $stars = $request->input('stars');
+        $articleId = $request->input('article_id');
+
+        if (!empty($stars) && !empty($articleId)) {
+            $request->user()->addFavorite($articleId, $stars);
+            $request->session()->flash('success', '☆評価を保存しました');
+        } else {
+            $request->session()->flash('failure', '☆評価を保存できませんでした。');
+        }
+
+        return back();
     }
 
     /**

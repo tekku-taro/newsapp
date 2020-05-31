@@ -14,9 +14,10 @@ class NewsSitesTableSeeder extends Seeder
     {
         $data = [
             'name'=>'BBC NEWS',
-            'source'=>'bbc-news',
+            'sources'=>'bbc-news',
             'url'=>'https://www.bbc.com'
         ];
         NewsSite::create($data);
+        factory(App\NewsSite::class, 5)->create();
     }
 }

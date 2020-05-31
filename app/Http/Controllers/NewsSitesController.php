@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
+use App\Country;
 use Illuminate\Http\Request;
 use App\NewsSite;
 
@@ -14,7 +16,7 @@ class NewsSitesController extends Controller
      */
     public function index()
     {
-        $newsSites = NewsSite::paginate(10);
+        $newsSites = NewsSite::whereNotNull('url')->paginate(10);
         return view('pages.news_sites', ['newsSites'=>$newsSites]);
     }
 
@@ -25,7 +27,11 @@ class NewsSitesController extends Controller
      */
     public function create()
     {
-        return view('page.create_site');
+        $lists = $this->getFormList();
+
+        return view('pages.create_site', [
+            'lists'=>$lists
+            ]);
     }
 
     /**
@@ -36,15 +42,15 @@ class NewsSitesController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'name'=>'required|string',
-            'email'=>'required|email',
-            'password'=>'required|password',
+            'url'=>'required|url'
         ]);
 
         NewsSite::create($request->all());
 
-        return redirect('/news_sites')->with('success', '新規ユーザを登録しました。');
+        return redirect('/news_sites')->with('success', '新規配信サイトを登録しました。');
     }
 
     /**
@@ -68,7 +74,21 @@ class NewsSitesController extends Controller
     {
         $newsSite = NewsSite::findOrFail($id);
 
-        return view('pages.edit_site', ['newsSite'=>$newsSite]);
+        $lists = $this->getFormList();
+        // dd($lists);
+        return view('pages.edit_site', [
+            'newsSite'=>$newsSite,
+            'lists'=>$lists
+            ]);
+    }
+
+    protected function getFormList()
+    {
+        $data = [
+            'countries' => Country::all()->pluck('code', 'id'),
+            'categories' => Category::all()->pluck('name', 'id')
+        ];
+        return $data;
     }
 
     /**
@@ -82,13 +102,12 @@ class NewsSitesController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            'email'=>'required|email',
-            'password'=>'required|password',
+            'url'=>'required|url',
         ]);
         $newsSite = NewsSite::findOrFail($id);
         $newsSite->fill($request->all())->save();
 
-        return redirect('/news_sites')->with('success', 'ユーザ情報を編集しました');
+        return redirect('/news_sites')->with('success', '配信サイト情報を編集しました');
     }
 
     /**
@@ -102,6 +121,6 @@ class NewsSitesController extends Controller
         $newsSite = NewsSite::findOrFail($id);
         $newsSite->delete();
 
-        return redirect('/news_sites')->with('success', 'ユーザを削除しました');
+        return redirect('/news_sites')->with('success', '配信サイトを削除しました');
     }
 }

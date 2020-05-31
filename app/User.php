@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -98,11 +99,35 @@ class User extends Authenticatable
         }
         return null;
     }
+
+    // ユーザのフォルダに記事があるか、あればフォルダIDを追加
+    public function getFolderId($articleId)
+    {
+        $folders = $this->folders()->get();
+
+        foreach ($folders as $key => $folder) {
+            if ($folder->hasArticle($articleId)) {
+                return $folder->id;
+            }
+        }
+        return null;
+    }
+
     // 記事ID,☆評価数値	☆評価数値をfavorites pivotに保存	boolean
     public function addFavorite(int $articleId, int $stars)
     {
-        $this->favorites()->attach($articleId, ['stars'=>$stars]);
+        if ($this->is_liking($articleId)) {
+            $this->favorites()->updateExistingPivot($articleId, ['stars' => $stars]);
+        } else {
+            $this->favorites()->attach($articleId, ['stars'=>$stars]);
+        }
+        
         return true;
+    }
+
+    protected function is_liking(int $articleId)
+    {
+        return $this->favorites()->where('article_id', $articleId)->exists();
     }
 
     // 記事ID	favorites pivotから削除	boolean
@@ -128,6 +153,22 @@ class User extends Authenticatable
     // Articleモデルを取得	Articleモデル
     public function newestHistories(int $length)
     {
-        return $this->histories()->limit($length)->latest()->get();
+        return $this->histories()->orderBy('pivot_created_at', 'desc')->take($length)->get();
+    }
+
+    //記事閲覧履歴をhistoriesテーブルに保存
+    public function addHistory(int $articleId)
+    {
+        if ($this->in_history($articleId)) {
+            $this->histories()->updateExistingPivot($articleId, ['created_at' => Carbon::now()]);
+        } else {
+            $this->histories()->attach($articleId);
+        }
+        return true;
+    }
+
+    protected function in_history(int $articleId)
+    {
+        return $this->histories()->where('article_id', $articleId)->exists();
     }
 }

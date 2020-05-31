@@ -46,23 +46,25 @@ class Comment extends Model
     }
 
     // コメントID	commentsから削除	boolean
-    public function deleteComment(int $commentId)
-    {
-        $comment = $this->find($commentId);
+    // public function deleteComment(int $id)
+    // {
+    //     $comment = $this->find($id);
 
-        return $comment->delete();
-
-    }
+    //     return $comment->delete();
+    // }
 
     // 記事ID	comments からコメントデータと	コメントデータと
-	// ユーザモデルを取得	ユーザモデル
+    // ユーザモデルを取得	ユーザモデル
     public function getComments(int $articleId)
     {
-        $comments = $this->with('user')->where('article_id',$articleId)->get();
+        $comments = $this->with('user')->where('article_id', $articleId)->get();
 
         return $comments;
-
     }
-  
 
+    // 取得するコメント数	commentsデータを最新のものから取得	コメントデータ
+    public static function latestComments(int $length)
+    {
+        return static::with(['user','article'])->limit($length)->latest()->get();
+    }
 }

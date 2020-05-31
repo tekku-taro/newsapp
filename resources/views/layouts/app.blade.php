@@ -15,29 +15,27 @@
     <link rel="stylesheet" href="{{ asset('/css/Contact-Form-Clean.css')}}">
     <link rel="stylesheet" href="{{ asset('/css/news.css')}}">
     <link rel="stylesheet" href="{{ asset('/css/styles.css')}}">
+
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <script>
+        const observer = lozad();
+        observer.observe();
+    </script>
 </head>
 
 <body>
     @include('commons.navbar')
 
     @include('messages.flash')
+    <div class="wrapper">
+        @yield('content')
 
-    @yield('contents')
-
-    <footer>
-        <div class="container footer-container">
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">ニュース</a></li>
-                <li class="list-inline-item"><a href="#">クリップ記事</a></li>
-                <li class="list-inline-item"><a href="#">配信サイト</a></li>
-                <li class="list-inline-item"><a href="#">ユーザ設定</a></li>
-            </ul>
-            <p class="copyright">newsapp developer © 2020</p>
-        </div>
-    </footer>
-    <script src="{{asset('/js/jquery.min.js')}}"></script>
-    <script src="{{asset('/bootstrap/js/bootstrap.min.js')}}"></script>
+    </div>
+    @include('commons.footer')
+    <script src="{{asset('/js/app.js')}}"></script>
     <script src="{{asset('/js/Sidebar-Menu.js')}}"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.0.11/purify.min.js"></script>
+    <script src="{{asset('/js/script.js')}}"></script>    
 </body>
 
 </html>    

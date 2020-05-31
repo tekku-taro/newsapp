@@ -1,10 +1,11 @@
 <aside id="sidebar" class="sidebar pt-3">
     <h5 class="sidebar-header">フォルダ一覧</h5>
     <ul class="sidemenu sidemenu-list">
-        <li>全て</li>
-        <li>科学</li>
-        <li>Item 3</li>
-        <li>Item 4</li>
+        @foreach ($folderList as $id => $folderName)
+            <li class="{{ (isset($folder) && $id == $folder->id)? 'active':'' }}">
+                <a href="{{ route('clippings.index',['folder_id'=> $id]) }}" >{{ $folderName }}</a>
+            </li>                
+        @endforeach
     </ul>
     <h5 class="sidebar-header">フォルダ管理</h5>
     <ul class="sidemenu manage-folder">

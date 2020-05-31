@@ -1,5 +1,11 @@
 body {
   height: 100%;
+  background-color: #f1f7f9;
+}
+
+.wrapper {
+  min-height: 600px;
+  margin-bottom: 0px;
 }
 
 a {
@@ -52,13 +58,15 @@ footer {
   height: 140px;
 }
 
-.contents {
-  flex: 1;
-}
+
 
 @media (min-width: 577px) {
   .sidebar {
-    width: 150px;
+    width: 25%;
+  }
+  .contents {
+    /* flex: 1; */
+    width: 75%;
   }
 }
 
@@ -69,6 +77,8 @@ footer {
 
 #sidebar {
   background-color: #d1e9f7;
+  min-height: 600px;
+
 }
 
 #sidemenu li {
@@ -199,3 +209,10 @@ input[type=checkbox], input[type=radio] {
 .form-row .form-group {
 }
 
+.alert {
+  margin-bottom: 0rem;
+}
+
+.pagination {
+  margin-top: 20px;
+}
