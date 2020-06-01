@@ -22,12 +22,13 @@
                     <p class="text-right clipping-date">{{ $article->created_at }} 保存</p>
                 </div>
             </div>
-            <h4><i class="fas fa-folder" style="color: rgb(52,143,249);"></i>&nbsp;{{ (isset($folder))? $folder->name:"全て" }}</h4>
+            <h4><i class="fas fa-folder"></i>&nbsp;{{ (isset($folder))? $folder->name:"全て" }}</h4>
             <div class="row">
                 <div class="col-sm-8">
                     <h2><a href="{{ $article->url }}">{{ $article->title }}</a> </h2>
                 </div>
-                <div class="col-sm-4 text-right"><span><span class="badge badge-light" style="margin-bottom: 10px;margin-right: 10px;"><i class="fa fa-comments-o" style="font-size: 35px;"></i>&nbsp; {{ $article->comments->count() }} 件</span></span>
+                <div class="col-sm-4 text-right">
+                        <span class="badge comment-badge badge-light"><i class="fa fa-comments-o"></i>&nbsp; {{ $article->comments->count() }} 件</span>
                     <div class="btn-group" role="group">
                         @include('components.bookmark_button')
                         @include('components.ratestar_button')

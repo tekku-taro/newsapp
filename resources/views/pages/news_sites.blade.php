@@ -20,7 +20,7 @@
                 <section>
                     <div class="row page-title">
                         <div class="col-sm-10">
-                            <h2><i class="fas fa-globe-americas" style="color: rgb(52,143,249);"></i>&nbsp;配信サイト　一覧</h2>
+                            <h2><i class="fas fa-globe-americas"></i>&nbsp;配信サイト　一覧</h2>
                         </div>
                     </div>
                 </section>

@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas" style="color: rgb(52,143,249);"></i>&nbsp;配信サイト 新規登録</h2>
+                    <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas"></i>&nbsp;配信サイト 新規登録</h2>
                 </div>
                 <form method="post" action="{{ route('news_sites.store') }}" class="form">
                     @csrf
@@ -58,7 +58,7 @@
                                     @enderror                                
                                 </div>
                             </div>
-                            <p style="font-size: 13px;color: rgb(46,88,130);">ソースか国名・カテゴリのどちらか入力必須</p>
+                            <p class="form-warning">ソースか国名・カテゴリのどちらか入力必須</p>
                             <div class="card">
                                 <div class="card-body">
                                     <div class="form-group row col-md-12"><label class="col-form-label col-md-3" for="country">国名</label>

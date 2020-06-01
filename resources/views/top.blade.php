@@ -16,24 +16,36 @@
                 <h3>最新ヘッドライン&nbsp;<small>{{ (new DateTime())->format('Y/m/d') }}</small></h3>
                 <div class="row articles">
                     @foreach ($tierOne as $article)
-                    <div class="col-sm-6 col-md-6 item">
-                        <a href="{{ route('news.show',[$article->id]) }}"><img class="img-fluid" src="{{ $article->url_to_image }}"></a>
-                        <h5 class="name">{{ $article->title }}</h5>
-                        <p class="text-secondary">{{ ($article->newsSite->category()->exists())?
-                            $article->newsSite->category->name_jp : '' }}</p>
-                        <p class="description">{{ $article->description }}</p><a class="action" href="#"></a>
+                    <div class="col-sm-6 col-md-6 item p-0">
+                        <div class="card article-lg">
+                            <a href="{{ route('news.show',[$article->id]) }}" target="_blank"><img class="img-fluid" src="{{ $article->url_to_image }}"></a>
+                            <div class="card-body">
+                                <h5 class="name">
+                                    <a href="{{ route('news.show',[$article->id]) }}" target="_blank">{{ $article->title }}</a>
+                                </h5>
+                                <p class="text-secondary card-text">{{ ($article->newsSite->category()->exists())?
+                                    $article->newsSite->category->name_jp : '' }}</p>
+                                <p class="description card-text">{{ $article->description }}</p>
+                                <a class="action" href="#"></a>
+                            </div>
+                        </div>
                     </div>
                         
                     @endforeach
                 </div>
                 <div class="row articles">
                     @foreach ($tierTwo as $article)
-                    <div class="col-sm-6 col-md-4 item">
-                        <a href="{{ route('news.show',[$article->id]) }}"><img class="img-fluid" src="{{ $article->url_to_image }}"></a>
-                        <h5 class="name">{{ $article->title }}</h5>
-                        <p class="text-secondary">{{ ($article->newsSite->category()->exists())?
-                            $article->newsSite->category->name_jp : '' }}</p>
-                        <p class="description">{{ $article->description }}</p><a class="action" href="#"></a>
+                    <div class="col-sm-6 col-md-4 item p-0">
+                        <div class="card article-md">
+                            <a href="{{ route('news.show',[$article->id]) }}"><img class="img-fluid" src="{{ $article->url_to_image }}"></a>
+                            <div class="card-body">
+                                <h5 class="name">{{ $article->title }}</h5>
+                                <p class="text-secondary card-text">{{ ($article->newsSite->category()->exists())?
+                                    $article->newsSite->category->name_jp : '' }}</p>
+                                <p class="description card-text">{{ $article->description }}
+                                    </p><a class="action" href="#"></a>
+                            </div>
+                        </div>
                     </div>                        
                     @endforeach
                 </div>

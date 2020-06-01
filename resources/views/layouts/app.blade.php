@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="{{ asset('/css/Article-Clean.css')}}">
     <link rel="stylesheet" href="{{ asset('/css/Article-List.css')}}">
     <link rel="stylesheet" href="{{ asset('/css/Contact-Form-Clean.css')}}">
-    <link rel="stylesheet" href="{{ asset('/css/news.css')}}">
     <link rel="stylesheet" href="{{ asset('/css/styles.css')}}">
 
     <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>

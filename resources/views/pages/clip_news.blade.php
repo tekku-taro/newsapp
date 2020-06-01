@@ -36,7 +36,7 @@
                         <div class="col-sm-2 text-right">
                             <div class="btn-group" role="group">
                                 <a class="btn btn-warning btn-sm" href="{{ route('clippings.print',['folder_id'=>(isset($folder))? $folder->id: '', 'key'=>old('key')]) }}">
-                                    <i class="fa fa-file-text" style="color: rgb(255,255,255);"></i>
+                                    <i class="fa fa-file-text"></i>
                                 </a>
                             </div>
                         </div>
@@ -45,10 +45,11 @@
 
                         @foreach ($newsData as $article)
                         <div class="card-body">
-                            <div class="media"><img class="mr-3" src="{{ $article->url_to_image }}">
+                            <div class="media">
+                                <a href="{{route('clippings.show',[$article->id])}}" target="_blank"><img class="mr-3" src="{{ $article->url_to_image }}"></a>
                                 <div class="media-body">
                                     <h5 class="d-flex justify-content-between">
-                                        <a href="{{route('clippings.show',[$article->id])}}">{{ $article->title }}<small>{{ $article->published_at }}</small></a>
+                                        <a href="{{route('clippings.show',[$article->id])}}" target="_blank">{{ $article->title }}<small>{{ $article->published_at }}</small></a>
                                         <div>
                                             <button class="btn btn-success btn-sm clip-modal-open" type="button" 
                                             data-id="{{ $article->id }}" data-folder-id="{{ ($article->folderId) ? $article->folderId: '' }}"

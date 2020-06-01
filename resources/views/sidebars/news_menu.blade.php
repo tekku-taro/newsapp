@@ -2,15 +2,21 @@
     <h5 class="sidebar-header">サイト一覧</h5>
     <ul class="sidemenu sidemenu-list">
         @foreach ($siteList as $site)
-            @if ($site->name == '全て')
+            @if (isset($newsSite))
+                @if ($site->name == '全て')
+                    <li class="{{ ($site->id == $newsSite->id)? 'active':'' }}">
+                        <a href="{{ route('news.index') }}" >{{ $site->name }}</a>
+                    </li>                                    
+                @else
                 <li class="{{ ($site->id == $newsSite->id)? 'active':'' }}">
-                    <a href="{{ route('news.index') }}" >{{ $site->name }}</a>
-                </li>                                    
+                    <a href="{{ route('news.index',['sources'=>$site->id]) }}" >{{ $site->name }}</a>
+                </li>                
+                @endif
             @else
-            <li class="{{ ($site->id == $newsSite->id)? 'active':'' }}">
+            <li>
                 <a href="{{ route('news.index',['sources'=>$site->id]) }}" >{{ $site->name }}</a>
             </li>                
             @endif
-        @endforeach
+        @endforeach            
     </ul>
 </aside>

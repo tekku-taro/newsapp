@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas" style="color: rgb(52,143,249);"></i>&nbsp;ユーザ 新規登録</h2>
+                <h2 class="d-flex">&nbsp;<i class="fas fa-globe-americas"></i>&nbsp;ユーザ 新規登録</h2>
             </div>
             <form method="post" action="{{ route('users.store') }}" class="form">
                 @csrf                
