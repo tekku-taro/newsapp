@@ -89,17 +89,6 @@ class ClippingsController extends Controller
     }
 
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-    //     //
-    // }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -108,7 +97,7 @@ class ClippingsController extends Controller
      */
     public function store(Request $request)
     {
-        $folder = Folder::find($request->input('folder_id'));
+        $folder = Folder::findOrFail($request->input('folder_id'));
         
         $result = $folder->clipArticle($request->input('article_id'), $request->input('old_folder_id'));
 
@@ -148,28 +137,6 @@ class ClippingsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
 
     /**
      * Remove the specified resource from storage.
@@ -179,11 +146,16 @@ class ClippingsController extends Controller
      */
     public function destroy(Request $request)
     {
-        // 記事IDから記事データを取得
-        $article = Article::findOrFail($request->input('article_id'));
+        $folder = Folder::findOrFail($request->input('folder_id'));
+        
+        $result = $folder->deleteArticle($request->input('article_id'));
 
-        $article->delete();
+        if ($result) {
+            $request->session()->flash('success', 'クリップ記事を削除しました。');
+        } else {
+            $request->session()->flash('failure', 'クリップ記事を削除できませんでした。');
+        }
 
-        return redirect('/clippings')->with('success', 'クリップ記事を削除しました。');
+        return redirect('/clippings');
     }
 }

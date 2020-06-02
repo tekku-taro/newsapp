@@ -37,6 +37,7 @@
                 @csrf
                 @method('DELETE')
                 <input type="hidden" name="article_id" id="del-article-id" value=""/>
+                <input type="hidden" name="folder_id" id="del-folder-id" value=""/>
             </form>
         </div>
     </div>

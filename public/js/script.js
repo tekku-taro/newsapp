@@ -11,7 +11,11 @@ $(function(){
         let folderId = $(this).data('folder-id');
         if(folderId !== ""){
             $("#folder-selection-form #old-folder-id").val( folderId );
+            $("#del-article-form #del-folder-id").val( folderId );
+            $('#del-article-btn').show();            
         }else{
+            $("#folder-selection-form #old-folder-id").val('');
+            $("#del-article-form #del-folder-id").val('');            
             $('#del-article-btn').hide();            
         }
 

@@ -101,14 +101,6 @@ class Article extends Model
         return $value;
     }
 
-    // public function setDescriptionAttribute($value)
-    // {
-    //     if (strlen($value) > 191) {
-    //         $value = substr($value, 0, 191);
-    //     }
-    //     $this->attributes['description'] = mb_convert_encoding($value, 'UTF-8', 'auto');
-    // }
-
     public function setAuthorAttribute($value)
     {
         if (strlen($value) > 191) {

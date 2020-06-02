@@ -6,25 +6,6 @@ use Illuminate\Http\Request;
 
 class FavoritesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function index()
-    // {
-    //     //
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-    //     //
-    // }
 
     /**
      * Store a newly created resource in storage.
@@ -34,61 +15,18 @@ class FavoritesController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'stars'=>'required|int',
+            'article_id'=>'required|int',
+        ]);
+
         $stars = $request->input('stars');
         $articleId = $request->input('article_id');
 
-        if (!empty($stars) && !empty($articleId)) {
-            $request->user()->addFavorite($articleId, $stars);
-            $request->session()->flash('success', '☆評価を保存しました');
-        } else {
-            $request->session()->flash('failure', '☆評価を保存できませんでした。');
-        }
+        $request->user()->addFavorite($articleId, $stars);
+        $request->session()->flash('success', '☆評価を保存しました');
+
 
         return back();
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function show($id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroy($id)
-    // {
-    //     //
-    // }
 }
