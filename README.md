@@ -1,78 +1,92 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<a href="https://github.com/laravel/laravel"><img src="https://img.shields.io/badge/laravel-6.*-brightgreen.svg?style=flat-square" alt="laravel"></a>
+<img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="license">
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+# NewsApp
 
-## About Laravel
+## 概要
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[NewsAPI](https://newsapi.org/)で提供されているニュースを読み込んで一覧で表示するアプリです。配信元を自由に設定し、好みの記事をクリップして保存できます。Laravelで作成し、読み込んだヘッドラインデータをDBに保存します。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 特徴
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 登録したニュースソースごとにヘッドラインニュースを一覧表示
+- ニュース記事で気に入ったものをお気に入りとしてフォルダに保存
+- また、記事ごとに星評価を設定できる
+- 記事詳細ページでは、元のウェブページの本文を自動で読み込んで表示（一部サイトで読み込みが上手くいかないことも）。
+- 記事詳細ページにはコメント一覧と投稿フォームがあり、自由にコメントを追加可能
+- ログイン認証機能
 
-## Learning Laravel
+## NewsAPI
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+[NewsAPI](https://newsapi.org/)では、APIを使って世界中のニュースサイトのヘッドライン情報を取得できます。なお、APIを利用するためにはNewsAPIの[サイト](https://newsapi.org/)でアカウント登録し、トークンを発行する必要があります。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### アプリ内のトークンの設定
 
-## Laravel Sponsors
+```bash
+# .envファイル内
+API_KEY=[作成したトークン文字列]
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## インストール方法
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+```bash
+# プロジェクトをクローン
+git clone https://github.com/tekku-taro/newsapp.git
 
-## Contributing
+# ディレクトリに移動
+cd newsapp
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# PHPのパッケージをcomposerでインストール
+composer install
 
-## Code of Conduct
+# .envを作成してDB情報を編集
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mydb
+DB_USERNAME=root
+DB_PASSWORD=
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# アプリケーションキーの設定
+php artisan key:generate
 
-## Security Vulnerabilities
+# マイグレーションとシーダーの実行
+php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# npmパッケージのインストール
+npm install
 
-## License
+# アセットのコンパイル
+npm run dev
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# NewsAPIのトークンを.env内に記録
+API_KEY=[作成したトークン文字列]
+```
+
+
+
+## ニュースソースの設定
+
+データベースのシーダーにいくつかニュースソースが設定されていますのが、さらに好みのニュースソースを追加できます。
+
+> 配信サイトメニュー >> 新規登録画面
+
+### フォームの入力内容
+
+```bash
+URL:ニュース配信元のURL
+サイト名称：配信ソース名（自由に設定）
+# ソースか国名＋カテゴリのどちらかを設定
+ソース：決められた名前（下を参照）
+国名：リストから選択
+カテゴリ：リストから選択
+表示数：ニュース一覧で表示されるニュースの数
+```
+
+ソースの具体的な名前を調べるには、NewsAPIサイトに[News sources](https://newsapi.org/sources)ページがあります。ページ内のLive examplesで表示されている記事データの中の`source.name`がソース名になります。
+
+## ライセンス (License)
+
+**NewsApp**は[MIT license](https://opensource.org/licenses/MIT)のもとで公開されています。 
+
+**NewsApp** is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).

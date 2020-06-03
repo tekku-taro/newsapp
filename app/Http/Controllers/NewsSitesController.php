@@ -75,8 +75,8 @@ class NewsSitesController extends Controller
     protected function getFormList()
     {
         $data = [
-            'countries' => Country::all()->pluck('code', 'id'),
-            'categories' => Category::all()->pluck('name', 'id')
+            'countries' => Country::all()->pluck('name', 'id'),
+            'categories' => Category::all()->pluck('name_jp', 'id')
         ];
         return $data;
     }
