@@ -10,7 +10,7 @@
                         <h5>{{ $comment->user->name }}</h5><small class="d-flex">{{ $comment->created_at }}</small></div>
                 </div>
                 <h6 class="text-muted card-subtitle mb-2">{{ $comment->title }}</h6>
-                <p>{{ $comment->body }}</p>
+                <p><?php echo nl2br(htmlspecialchars($comment->body,ENT_QUOTES,'UTF-8')); ?> </p>
                 @if (Auth::id() == $comment->user_id)
                 <form action="{{ route('comments.destroy',[$comment->id]) }}" method="post">
                     @csrf
